@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Integration Engineer Case: Acme</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .copy-btn { transition: background-color 0.2s ease, color 0.2s ease; }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-900 min-h-screen p-4 md:p-8">
+
+<div class="max-w-4xl mx-auto bg-white rounded-lg shadow-2xl overflow-hidden">
+    <header class="bg-gradient-to-r from-blue-700 to-blue-600 text-white p-6 md:p-8">
+        <p class="uppercase tracking-widest text-xs text-blue-100 mb-2">Go Autonomous · Integration Team</p>
+        <h1 class="text-3xl font-bold">Integration Engineer Case: Acme</h1>
+        <p class="mt-2 text-blue-100">Expect it to take around 3–4 hours. We care about how you get to a solution more than the code itself.</p>
+    </header>
+
+    <main class="p-6 md:p-8 space-y-10">
+
+        <!-- Intro -->
+        <section>
+            <h2 class="text-2xl font-semibold text-gray-800 mb-3 border-b pb-2">The situation</h2>
+            <p class="leading-relaxed mb-3">
+                You've just joined the Integration Team. <strong>Acme</strong>, a Nordic wholesaler, is one of our customers. Acme's customers email in orders and quote requests. Go Autonomous reads those emails, AI extracts the order data, and our <strong>integration layer</strong> transforms that data before it goes into Acme's ERP.
+            </p>
+            <div class="bg-gray-50 border rounded-md p-4 text-sm font-mono text-gray-700 overflow-x-auto">
+                Customer email → GoA extraction (AI) → <span class="text-blue-700 font-semibold">Integration layer: POST /transform</span> → Acme ERP
+            </div>
+            <p class="leading-relaxed mt-3">
+                Over the past week, several people at Acme have sent us requests. Your job is to work out what they actually need, decide how to handle each request, and implement your solution in the integration layer.
+            </p>
+        </section>
+
+        <!-- Starter repo -->
+        <section>
+            <h2 class="text-2xl font-semibold text-gray-800 mb-3 border-b pb-2">What you get</h2>
+            <p class="mb-3">You'll get access to the <code>acme-integration</code> repository. It contains:</p>
+            <ul class="list-disc list-inside space-y-1">
+                <li>A minimal .NET Web API with a working <code>POST /transform</code> endpoint. Right now it returns the payload unchanged.</li>
+                <li>Models for the payload below, with snake_case JSON already set up.</li>
+                <li>A test project with one passing test.</li>
+                <li><code>reference/sales-areas.json</code>: Acme's sales areas and what they mean.</li>
+                <li><code>samples/</code>: a few example payloads.</li>
+            </ul>
+            <p class="mt-3 text-gray-600">You don't need to spend time on setup. Spend it on Acme.</p>
+        </section>
+
+        <!-- Payload -->
+        <section>
+            <h2 class="text-2xl font-semibold text-gray-800 mb-3 border-b pb-2">The payload</h2>
+            <p class="mb-3">This is what the extraction step sends to <code>/transform</code>. Your endpoint returns the same structure, transformed.</p>
+            <div class="relative">
+                <button class="copy-btn absolute top-3 right-3 bg-blue-600 text-white px-3 py-1 rounded-md text-xs font-medium hover:bg-blue-700" data-target="payload">Copy</button>
+                <pre class="bg-gray-900 text-white p-4 rounded-lg overflow-x-auto text-sm leading-relaxed"><code id="payload">{
+    "mail_id": "11111111-1111-1111-1111-111111111111",
+    "iteration": "first",
+    "intent": "request_simple_order",
+    "area": {
+        "name": "DK1"
+    },
+    "products": [
+        {
+            "line_number": 1,
+            "product_number": { "id": "1", "value": "BP47283429" },
+            "unit_price": { "id": "2", "value": "100" },
+            "delivery_date": { "id": "3", "value": "2026-01-15" }
+        },
+        {
+            "line_number": 2,
+            "product_number": { "id": "4", "value": "BP3819238" },
+            "unit_price": { "id": "5", "value": "200" },
+            "delivery_date": { "id": "6", "value": "2026-01-15" }
+        }
+    ],
+    "header": {
+        "order_number": { "id": "7", "value": "4712371" },
+        "account_id": { "id": "8", "value": "9000028128" }
+    }
+}</code></pre>
+            </div>
+            <div class="mt-4 grid md:grid-cols-2 gap-4 text-sm">
+                <div class="bg-gray-50 rounded-md p-4 border">
+                    <p class="font-semibold mb-1"><code>iteration</code></p>
+                    <p><code>"first"</code>: the first time GoA processes the email.<br>
+                       <code>"refresh"</code>: the order is sent again after someone in Acme Customer Service has reviewed or edited it in GoA.</p>
+                </div>
+                <div class="bg-gray-50 rounded-md p-4 border">
+                    <p class="font-semibold mb-1"><code>intent</code></p>
+                    <p><code>"request_simple_order"</code>: the customer wants to place an order.<br>
+                       <code>"request_simple_quote"</code>: the customer wants a price quote.</p>
+                </div>
+                <div class="bg-gray-50 rounded-md p-4 border md:col-span-2">
+                    <p class="font-semibold mb-1">Fields</p>
+                    <p>Every field has a <code>value</code> and an <code>id</code>. If you add a new field, give it a new unique <code>id</code> (a GUID).</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Requests -->
+        <section>
+            <h2 class="text-2xl font-semibold text-gray-800 mb-3 border-b pb-2">Requests from Acme</h2>
+            <p class="mb-4">These came in by email. They're written the way customers actually write: they describe a problem, not a specification. Some are clearer than others. You decide what to do with each one, and that may not always mean writing code.</p>
+
+            <div class="flex flex-wrap border-b border-gray-300">
+                <button class="tab-button px-4 py-2 font-medium rounded-t-lg -mb-px bg-blue-600 text-white" data-tab="r1">1 · Delivery dates</button>
+                <button class="tab-button px-4 py-2 font-medium rounded-t-lg -mb-px bg-gray-100 text-gray-700 hover:bg-gray-200" data-tab="r2">2 · Freight</button>
+                <button class="tab-button px-4 py-2 font-medium rounded-t-lg -mb-px bg-gray-100 text-gray-700 hover:bg-gray-200" data-tab="r3">3 · Sweden</button>
+                <button class="tab-button px-4 py-2 font-medium rounded-t-lg -mb-px bg-gray-100 text-gray-700 hover:bg-gray-200" data-tab="r4">4 · Sales rep</button>
+                <button class="tab-button px-4 py-2 font-medium rounded-t-lg -mb-px bg-gray-100 text-gray-700 hover:bg-gray-200" data-tab="r5">5 · Automation</button>
+            </div>
+
+            <div class="border border-gray-300 rounded-b-lg rounded-r-lg p-6 bg-white">
+
+                <div id="r1" class="tab-content">
+                    <div class="text-sm text-gray-500 mb-3">
+                        <p><strong>From:</strong> Mette Hansen, Customer Service Lead, Acme Nordic</p>
+                        <p><strong>Subject:</strong> Orders bouncing because of old delivery dates</p>
+                    </div>
+                    <div class="leading-relaxed space-y-3">
+                        <p>Hi team,</p>
+                        <p>A lot of our orders are being rejected by the ERP because the delivery date has already passed. Customers reuse old order forms or write "same as last time".</p>
+                        <p>When a new order comes in with a date that's already passed, please just move it to the earliest date we can actually deliver. Our warehouse needs two working days to pick and pack.</p>
+                        <p>Please don't touch the dates once my team has reviewed and updated an order. They know what they're doing.</p>
+                        <p>Thanks,<br>Mette</p>
+                    </div>
+                </div>
+
+                <div id="r2" class="tab-content hidden">
+                    <div class="text-sm text-gray-500 mb-3">
+                        <p><strong>From:</strong> Jonas Berg, Sales Operations, Acme Nordic</p>
+                        <p><strong>Subject:</strong> Freight on quotes</p>
+                    </div>
+                    <div class="leading-relaxed space-y-3">
+                        <p>Hi,</p>
+                        <p>Our sales reps keep forgetting to put freight on quotes, and we lose money every time. Could you make sure every quote request gets our standard freight line added? The item number is <code>FREIGHT</code> and it's 50 per quote.</p>
+                        <p>Only on quotes, though. On orders, the ERP calculates freight itself. And obviously we don't want freight on there twice.</p>
+                        <p>Best,<br>Jonas</p>
+                    </div>
+                </div>
+
+                <div id="r3" class="tab-content hidden">
+                    <div class="text-sm text-gray-500 mb-3">
+                        <p><strong>From:</strong> Erik Lindqvist, IT, Acme Sverige</p>
+                        <p><strong>Subject:</strong> Item numbers for Sweden</p>
+                    </div>
+                    <div class="leading-relaxed space-y-3">
+                        <p>Hej!</p>
+                        <p>Our Swedish ERP was migrated last year, and it only stores item numbers as digits. The "BP" prefix our Danish colleagues use doesn't exist on our side. So for orders in our Swedish sales area, the item numbers need to be cleaned up before they reach us, or the lines fail.</p>
+                        <p>This also applies after someone in Customer Service has corrected an order, because those go to the ERP too. We handle freight lines separately on our side.</p>
+                        <p>/Erik</p>
+                    </div>
+                </div>
+
+                <div id="r4" class="tab-content hidden">
+                    <div class="text-sm text-gray-500 mb-3">
+                        <p><strong>From:</strong> Lars Nielsen, Head of Sales, Acme Nordic</p>
+                        <p><strong>Subject:</strong> Sales rep on every order</p>
+                    </div>
+                    <div class="leading-relaxed space-y-3">
+                        <p>Hi,</p>
+                        <p>From now on, every order needs a responsible sales rep so the right person gets notified. Our staff directory has an API you can use. IT says the test environment is <code>https://randomuser.me/api</code>. It returns a person, and we need their email address.</p>
+                        <p>Important: a customer should always get the same rep. Customers hate talking to someone new every time.</p>
+                        <p>Also, we can't have orders getting stuck because of the directory. It's a bit flaky sometimes.</p>
+                        <p>Regards,<br>Lars</p>
+                    </div>
+                    <div class="mt-4 bg-gray-50 border rounded-md p-4 text-sm">
+                        <p class="font-semibold mb-2">From our integration notes: where the rep goes</p>
+                        <pre class="overflow-x-auto">"header": {
+    "order_number": { "id": "7", "value": "4712371" },
+    "account_id":   { "id": "8", "value": "9000028128" },
+    "sales_rep":    { "id": "&lt;new GUID&gt;", "value": "someone@example.com" }
+}</pre>
+                    </div>
+                </div>
+
+                <div id="r5" class="tab-content hidden">
+                    <div class="text-sm text-gray-500 mb-3">
+                        <p><strong>From:</strong> Lars Nielsen, Head of Sales, Acme Nordic</p>
+                        <p><strong>Subject:</strong> One more thing</p>
+                    </div>
+                    <div class="leading-relaxed space-y-3">
+                        <p>Hi again,</p>
+                        <p>Could you also just send every order under 10,000 DKK straight into our ERP without anyone looking at it? That would save my team a lot of time.</p>
+                        <p>Can you have that ready alongside the other changes?</p>
+                        <p>Lars</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Deliverables -->
+        <section>
+            <h2 class="text-2xl font-semibold text-gray-800 mb-3 border-b pb-2">What we'd like back</h2>
+            <ol class="list-decimal list-inside space-y-3">
+                <li><strong>Your implementation</strong> in the starter repo, for the requests you decide to solve in the integration layer.</li>
+                <li><strong><code>SOLUTION.md</code></strong> (about one page):
+                    <ul class="list-disc list-inside ml-6 mt-1 text-gray-700">
+                        <li>How you understood each request, and what you decided to do with it</li>
+                        <li>The assumptions you made</li>
+                        <li>Trade-offs, and what you would do differently in production</li>
+                        <li>How you used AI tools: what you asked, and what you kept, changed or threw away</li>
+                    </ul>
+                </li>
+                <li><strong><code>QUESTIONS.md</code></strong>: the questions you would send back to Acme, or raise with the Engagement Manager, before going live.</li>
+            </ol>
+        </section>
+
+        <!-- AI -->
+        <section class="bg-blue-50 border border-blue-200 rounded-lg p-5">
+            <h2 class="text-xl font-semibold text-blue-800 mb-2">Use AI tools</h2>
+            <p class="leading-relaxed">We use AI every day, and we want you to as well. Copilot, ChatGPT, Claude, whatever you prefer. AI can write code quickly, so code alone tells us little. What matters is understanding what the customer needs, choosing the right approach, and being able to explain and stand behind every line.</p>
+        </section>
+
+        <!-- Interview -->
+        <section>
+            <h2 class="text-2xl font-semibold text-gray-800 mb-3 border-b pb-2">The follow-up interview</h2>
+            <ul class="list-disc list-inside space-y-2">
+                <li><strong>15–20 minutes:</strong> you walk us through how you approached Acme's requests. No slides needed. Your repo and notes are enough.</li>
+                <li><strong>Then:</strong> we ask questions, change a requirement or two, and talk through how you would handle it.</li>
+            </ul>
+        </section>
+
+        <!-- What we look at -->
+        <section>
+            <h2 class="text-2xl font-semibold text-gray-800 mb-3 border-b pb-2">What we look at</h2>
+            <div class="grid md:grid-cols-2 gap-4 text-sm">
+                <div class="border rounded-md p-4"><p class="font-semibold">Understanding the business</p><p class="text-gray-600">Did you get what Acme actually needs, including the parts they didn't spell out?</p></div>
+                <div class="border rounded-md p-4"><p class="font-semibold">Judgement</p><p class="text-gray-600">What did you solve, what did you question, and what did you push back on?</p></div>
+                <div class="border rounded-md p-4"><p class="font-semibold">Communication</p><p class="text-gray-600">Are your write-up and questions clear enough to send to a customer or an EM?</p></div>
+                <div class="border rounded-md p-4"><p class="font-semibold">Solid code</p><p class="text-gray-600">Readable, testable, and robust when things go wrong. Neat beats clever.</p></div>
+            </div>
+        </section>
+
+        <!-- Submission -->
+        <section>
+            <h2 class="text-2xl font-semibold text-gray-800 mb-3 border-b pb-2">Submission</h2>
+            <p class="leading-relaxed">Push your work to a private GitHub repository and add <strong>thomas@goautonomous.io</strong> as a collaborator at least one working day before your interview. If anything about the case is unclear, make an assumption and write it down. That's part of the exercise.</p>
+        </section>
+    </main>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const tabs = document.querySelectorAll('.tab-button');
+    const panels = document.querySelectorAll('.tab-content');
+    const active = ['bg-blue-600', 'text-white'];
+    const inactive = ['bg-gray-100', 'text-gray-700', 'hover:bg-gray-200'];
+
+    tabs.forEach(tab => tab.addEventListener('click', () => {
+        tabs.forEach(t => { t.classList.remove(...active); t.classList.add(...inactive); });
+        panels.forEach(p => p.classList.add('hidden'));
+        tab.classList.remove(...inactive);
+        tab.classList.add(...active);
+        document.getElementById(tab.dataset.tab).classList.remove('hidden');
+    }));
+
+    document.querySelectorAll('.copy-btn').forEach(btn => btn.addEventListener('click', async () => {
+        const text = document.getElementById(btn.dataset.target).innerText;
+        try {
+            await navigator.clipboard.writeText(text);
+            btn.textContent = 'Copied!';
+        } catch {
+            btn.textContent = 'Failed';
+        }
+        setTimeout(() => { btn.textContent = 'Copy'; }, 2000);
+    }));
+});
+</script>
+</body>
+</html>

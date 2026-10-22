@@ -1,0 +1,24 @@
+{
+  "mail_id": "44444444-4444-4444-4444-444444444444",
+  "iteration": "refresh",
+  "intent": "request_simple_order",
+  "area": { "name": "SE1" },
+  "products": [
+    {
+      "line_number": 1,
+      "product_number": { "id": "31", "value": "BP47283429" },
+      "unit_price": { "id": "32", "value": "100" },
+      "delivery_date": { "id": "33", "value": "2026-01-15" }
+    },
+    {
+      "line_number": 2,
+      "product_number": { "id": "34", "value": "BP3819238" },
+      "unit_price": { "id": "35", "value": "200" },
+      "delivery_date": { "id": "36", "value": "2026-12-01" }
+    }
+  ],
+  "header": {
+    "order_number": { "id": "37", "value": "4712498" },
+    "account_id": { "id": "38", "value": "9000028128" }
+  }
+}

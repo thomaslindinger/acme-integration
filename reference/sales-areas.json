@@ -1,0 +1,6 @@
+[
+  { "code": "DK1", "country": "Denmark", "name": "Acme Nordic – Denmark" },
+  { "code": "SE1", "country": "Sweden", "name": "Acme Sverige – North" },
+  { "code": "SE2", "country": "Sweden", "name": "Acme Sverige – South" },
+  { "code": "NO1", "country": "Norway", "name": "Acme Nordic – Norway" }
+]

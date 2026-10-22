@@ -1,0 +1,24 @@
+{
+  "mail_id": "33333333-3333-3333-3333-333333333333",
+  "iteration": "first",
+  "intent": "request_simple_quote",
+  "area": { "name": "SE2" },
+  "products": [
+    {
+      "line_number": 1,
+      "product_number": { "id": "21", "value": "BP-4728 3429" },
+      "unit_price": { "id": "22", "value": "150" },
+      "delivery_date": { "id": "23", "value": "2026-11-27" }
+    },
+    {
+      "line_number": 3,
+      "product_number": { "id": "24", "value": "FREIGHT" },
+      "unit_price": { "id": "25", "value": "50" },
+      "delivery_date": null
+    }
+  ],
+  "header": {
+    "order_number": { "id": "26", "value": "4712455" },
+    "account_id": { "id": "27", "value": "9000040219" }
+  }
+}
