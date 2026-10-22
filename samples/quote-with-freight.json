@@ -14,7 +14,7 @@
       "line_number": 3,
       "product_number": { "id": "24", "value": "FREIGHT" },
       "unit_price": { "id": "25", "value": "50" },
-      "delivery_date": null
+      "delivery_date": { "id": "", "value": "" }
     }
   ],
   "header": {

@@ -9,11 +9,15 @@ namespace Acme.Integration.Tests;
 public class TransformEndpointTests(WebApplicationFactory<Program> factory)
     : IClassFixture<WebApplicationFactory<Program>>
 {
-    [Fact]
-    public async Task Transform_ReturnsPayloadInSameStructure()
+    [Theory]
+    [InlineData("order-denmark.json")]
+    [InlineData("quote-denmark.json")]
+    [InlineData("quote-with-freight.json")]
+    [InlineData("order-sweden-refresh.json")]
+    public async Task Transform_ReturnsPayloadInSameStructure(string sample)
     {
         var client = factory.CreateClient();
-        var json = await File.ReadAllTextAsync(SamplePath("order-denmark.json"));
+        var json = await File.ReadAllTextAsync(SamplePath(sample));
         var content = new StringContent(json, Encoding.UTF8);
         content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
 

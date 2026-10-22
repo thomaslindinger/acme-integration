@@ -1,15 +1,11 @@
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using Acme.Integration.Api.Models;
 using Acme.Integration.Api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.ConfigureHttpJsonOptions(options =>
-{
-    options.SerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower;
-    options.SerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
-});
+    options.SerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower);
 
 builder.Services.AddSingleton<IOrderTransformer, OrderTransformer>();
 

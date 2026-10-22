@@ -7,7 +7,7 @@ Starter repository for the Acme case. Open [`docs/case.html`](docs/case.html) in
 Requires the [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0).
 
 ```bash
-dotnet test                                   # one passing test
+dotnet test                                   # one endpoint test, run against every sample
 dotnet run --project src/Acme.Integration.Api # starts the API
 ```
 
@@ -26,7 +26,7 @@ Right now `POST /transform` returns the payload unchanged.
 | Path | What it is |
 |---|---|
 | `src/Acme.Integration.Api` | Minimal API with `POST /transform`, payload models (snake_case JSON) and `OrderTransformer`, where your work starts |
-| `tests/Acme.Integration.Tests` | Test project with one endpoint test |
+| `tests/Acme.Integration.Tests` | Endpoint test that runs every sample through `/transform` |
 | `reference/sales-areas.json` | Acme's sales areas |
 | `samples/` | Example payloads |
 | `docs/case.html` | The case brief |
