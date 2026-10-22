@@ -4,8 +4,6 @@ Starter repository for the Acme case. Open [`docs/case.html`](docs/case.html) in
 
 ## Getting started
 
-Requires the [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0).
-
 ```bash
 dotnet test                                   # one endpoint test, run against every sample
 dotnet run --project src/Acme.Integration.Api # starts the API

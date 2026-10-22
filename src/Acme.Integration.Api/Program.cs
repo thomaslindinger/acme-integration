@@ -12,7 +12,7 @@ builder.Services.AddSingleton<IOrderTransformer, OrderTransformer>();
 var app = builder.Build();
 
 app.MapPost("/transform", async (OrderPayload payload, IOrderTransformer transformer) =>
-    Results.Ok(await transformer.TransformAsync(payload)));
+    Results.Ok(await transformer.TransformAsync(payload.Normalize())));
 
 app.Run();
 

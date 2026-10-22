@@ -29,6 +29,43 @@ public class TransformEndpointTests(WebApplicationFactory<Program> factory)
         Assert.True(JsonNode.DeepEquals(expected, actual));
     }
 
+    [Fact]
+    public async Task Transform_ReplacesNullsWithEmptyStrings()
+    {
+        var client = factory.CreateClient();
+        const string json = """
+            {
+              "mail_id": null,
+              "iteration": "first",
+              "intent": null,
+              "area": null,
+              "products": [
+                { "line_number": 1, "product_number": { "id": null, "value": "BP1" }, "unit_price": null },
+                null
+              ],
+              "header": { "order_number": null }
+            }
+            """;
+        var content = new StringContent(json, Encoding.UTF8);
+        content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+
+        var response = await client.PostAsync("/transform", content);
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        var body = JsonNode.Parse(await response.Content.ReadAsStringAsync())!;
+        Assert.Equal("", (string?)body["mail_id"]);
+        Assert.Equal("", (string?)body["intent"]);
+        Assert.Equal("", (string?)body["area"]!["name"]);
+        var products = body["products"]!.AsArray();
+        Assert.Single(products);
+        Assert.Equal("", (string?)products[0]!["product_number"]!["id"]);
+        Assert.Equal("BP1", (string?)products[0]!["product_number"]!["value"]);
+        Assert.Equal("", (string?)products[0]!["unit_price"]!["value"]);
+        Assert.Equal("", (string?)products[0]!["delivery_date"]!["value"]);
+        Assert.Equal("", (string?)body["header"]!["order_number"]!["value"]);
+        Assert.Equal("", (string?)body["header"]!["account_id"]!["value"]);
+    }
+
     private static string SamplePath(string fileName)
     {
         var dir = new DirectoryInfo(AppContext.BaseDirectory);
